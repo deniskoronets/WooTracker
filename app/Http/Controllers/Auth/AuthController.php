@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\Models\User;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -52,7 +52,7 @@ class AuthController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
-     * @return User
+     * @return Users
      */
     protected function create(array $data)
     {
@@ -61,5 +61,19 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+    }
+
+    public function testCreate()
+    {
+    	return $this->create([
+    		'name' => 'Admin Admin',
+    		'email' => 'admin@admin.com',
+    		'password' => '12345'
+		]);
+    }
+
+    public function redirectPath()
+    {
+    	return '/projects/';
     }
 }

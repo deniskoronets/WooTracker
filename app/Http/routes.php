@@ -11,6 +11,15 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', 'WelcomeController@index');
+
+Route::get('/auth/login/', 'Auth\AuthController@getLogin');
+Route::post('/auth/login/', 'Auth\AuthController@postLogin');
+
+// Test create:
+Route::get('/auth/create/', 'Auth\AuthController@testCreate');
+
+Route::group(['prefix' => '/projects/'], function() {
+	Route::get('/', 'ProjectController@index');
+	Route::get('/create/', 'ProjectController@index');
 });
