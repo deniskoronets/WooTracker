@@ -15,9 +15,9 @@
 	<table class='table table-hover table-border'>
 		<colgroup>
 			<col width='50'>
+			<col width='150'>
 			<col>
-			<col>
-			<col>
+			<col width='200'>
 			<col width='150'>
 		</colgroup>
 		<thead>
@@ -34,7 +34,7 @@
 			<tr>
 				<td>{{ $project->id }}</td>
 				<td>{{ $project->owner->name }}</td>
-				<td>{{ $project->name }}</td>
+				<td><a href=''>{{ $project->name }}</a></td>
 				<td>{{ $project->created_date }}</td>
 				<td>
 					<a class='btn btn-warning'>

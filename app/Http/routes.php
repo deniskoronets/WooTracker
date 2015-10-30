@@ -21,5 +21,5 @@ Route::get('/auth/create/', 'Auth\AuthController@testCreate');
 
 Route::group(['prefix' => '/projects/'], function() {
 	Route::get('/', 'ProjectController@index');
-	Route::get('/create/', 'ProjectController@index');
+	Route::get('/create/', 'ProjectController@create');
 });
