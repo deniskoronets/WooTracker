@@ -16,10 +16,19 @@ Route::get('/', 'WelcomeController@index');
 Route::get('/auth/login/', 'Auth\AuthController@getLogin');
 Route::post('/auth/login/', 'Auth\AuthController@postLogin');
 
-// Test create:
-Route::get('/auth/create/', 'Auth\AuthController@testCreate');
-
 Route::group(['prefix' => '/projects/'], function() {
 	Route::get('/', 'ProjectController@index');
 	Route::get('/create/', 'ProjectController@create');
+	Route::get('/{id}', 'ProjectController@tasks')->where('id', '[0-9]+');
 });
+
+Route::group(['prefix' => '/tasks/'], function() {
+	Route::any('/create/project-{projectId}', 'TaskController@create')->where('projectId', '[0-9]+');
+	Route::get('/{id}', 'TaskController@view')->where('id', '[0-9]+');
+});
+
+
+Route::group(['prefix' => '/users/'], function() {
+	Route::get('/{id}', 'UserController@view')->where('id', '[0-9]+');
+});
+

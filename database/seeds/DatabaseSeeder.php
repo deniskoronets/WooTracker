@@ -3,6 +3,8 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
+include 'InitialSeeder.php';
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -14,7 +16,8 @@ class DatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        // $this->call(UserTableSeeder::class);
+        $this->call('InitialSeeder');
+        $this->command->info('Initial seeder success!');
 
         Model::reguard();
     }

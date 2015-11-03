@@ -63,15 +63,6 @@ class AuthController extends Controller
         ]);
     }
 
-    public function testCreate()
-    {
-    	return $this->create([
-    		'name' => 'Admin Admin',
-    		'email' => 'admin@admin.com',
-    		'password' => '12345'
-		]);
-    }
-
     public function redirectPath()
     {
     	return '/projects/';

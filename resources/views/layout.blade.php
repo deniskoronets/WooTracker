@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="/favicon.ico">
 
@@ -65,6 +64,13 @@
     @show
 
     <div class="container">
+
+		<ol class="breadcrumb">
+			<li><a href="/">Home</a></li>
+			@section('breadcrumbs')
+			<li><a href="/">Some page</a></li>
+			@show
+		</ol>
 
 		@if (Session::has('success'))
 			<div class="alert alert-success">{{ Session::get('success') }}</div>
