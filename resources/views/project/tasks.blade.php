@@ -45,10 +45,10 @@
 				<td>{{ $task->status->name }}</td>
 				<td>{{ $task->created_at }}</td>
 				<td>
-					<a class='btn btn-warning'>
+					<a href='/tasks/{{ $task->id }}/edit' class='btn btn-warning'>
 						Edit
 					</a>
-					<a class='btn btn-danger'>
+					<a href='/tasks/{{ $task->id }}/delete' class='btn btn-danger'>
 						Delete
 					</a>
 				</td>

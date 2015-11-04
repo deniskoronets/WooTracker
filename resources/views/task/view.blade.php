@@ -63,7 +63,7 @@
 			@foreach ($task->log as $log)
 			<tr>
 				<td>{{ $log->log_date }}</td>
-				<td>{{ $log->description }}</td>
+				<td>{!! $log->description !!}</td>
 			</tr>
 			@endforeach
 		</tbody>

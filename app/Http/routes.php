@@ -18,13 +18,17 @@ Route::post('/auth/login/', 'Auth\AuthController@postLogin');
 
 Route::group(['prefix' => '/projects/'], function() {
 	Route::get('/', 'ProjectController@index');
-	Route::get('/create/', 'ProjectController@create');
+	Route::any('/create/', 'ProjectController@create');
 	Route::get('/{id}', 'ProjectController@tasks')->where('id', '[0-9]+');
+	Route::get('/{id}/delete', 'ProjectController@delete')->where('id', '[0-9]+');
+	Route::any('/{id}/edit', 'ProjectController@edit')->where('id', '[0-9]+');
 });
 
 Route::group(['prefix' => '/tasks/'], function() {
 	Route::any('/create/project-{projectId}', 'TaskController@create')->where('projectId', '[0-9]+');
 	Route::get('/{id}', 'TaskController@view')->where('id', '[0-9]+');
+	Route::get('/{id}/delete', 'TaskController@delete')->where('id', '[0-9]+');
+	Route::any('/{id}/edit', 'TaskController@edit')->where('id', '[0-9]+');
 });
 
 

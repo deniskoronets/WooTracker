@@ -11,12 +11,24 @@ use App\Models\User;
 use App\Models\Status;
 use Validator;
 use Auth;
+use Event;
+use App\Events\TaskEdited;
 
 class TaskController extends Controller
 {
 	public function __construct()
 	{
 		$this->middleware('auth');
+	}
+
+	private function _getValidator(Request $request)
+	{
+		return Validator::make($request->all(), [
+		    'name' => 'required|max:255',
+		    'description' => 'required',
+		    'assigned_id' => 'required|integer',
+		    'status_id' => 'required|integer',
+		]);
 	}
 
     /**
@@ -28,16 +40,10 @@ class TaskController extends Controller
     {
         if ($request->isMethod('post'))
 		{
-			$validator = Validator::make($request->all(), [
-			    'project_id' => 'required|integer',
-			    'name' => 'required|max:255',
-			    'description' => 'required',
-			    'assigned_id' => 'required|integer',
-			    'status_id' => 'required|integer',
-			]);
+			$validator = $this->_getValidator($request);
 
 			if ($validator->fails()) {
-				return redirect('/tasks/create')->withErrors($validator)->withInput();
+				return redirect('/tasks/create/project-' . $projectId)->withErrors($validator)->withInput();
 			}
 
 			Task::create([
@@ -49,7 +55,7 @@ class TaskController extends Controller
 				'status_id' => $request->input('status_id'),
 			]);
 
-			return redirect('/tasks')->with('success', 'Task successfully created');
+			return redirect('/projects/' . $projectId)->with('success', 'Task successfully created');
 		}
 
 		return view('task.create', [
@@ -77,9 +83,37 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, Request $request)
     {
-        //
+    	$task = Task::findOrFail($id);
+
+        if ($request->isMethod('post'))
+		{
+			$validator = $this->_getValidator($request);
+
+			if ($validator->fails()) {
+				return redirect('/tasks/' . $task->id . '/edit')->withErrors($validator)->withInput();
+			}
+
+			$oldTask = $task->toArray();
+
+			$task->name = $request->input('name');
+			$task->description = $request->input('description');
+			$task->assigned_id = $request->input('assigned_id');
+			$task->status_id = $request->input('status_id');
+
+			if ($task->save()) {
+				Event::fire(new TaskEdited($oldTask, $task));
+			}
+
+			return redirect('/projects/' . $task->project_id)->with('success', 'Task successfully edited');
+		}
+
+		return view('task.edit', [
+			'task' => $task,
+			'users' => User::all(),
+			'statuses' => Status::all(),
+		]);
     }
 
     /**
@@ -88,8 +122,11 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete($id)
     {
-        //
+        $task = Task::findOrFail($id);
+        $task->delete();
+
+        return redirect('/tasks')->with('success', 'Task "' . $task->name . '" successfully deleted');
     }
 }

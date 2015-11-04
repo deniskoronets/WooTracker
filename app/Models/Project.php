@@ -8,6 +8,7 @@ class Project extends Model
 {
     protected $table = 'projects';
  	public $timestamps = false;
+ 	protected $fillable = ['owner_id', 'name', 'created_date'];
 
     public function owner()
     {

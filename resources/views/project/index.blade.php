@@ -37,10 +37,10 @@
 				<td><a href='/projects/{{ $project->id }}'>{{ $project->name }}</a></td>
 				<td>{{ $project->created_date }}</td>
 				<td>
-					<a class='btn btn-warning'>
+					<a href='/projects/{{ $project->id }}/edit' class='btn btn-warning'>
 						Edit
 					</a>
-					<a class='btn btn-danger'>
+					<a href='/projects/{{ $project->id }}/delete' class='btn btn-danger'>
 						Delete
 					</a>
 				</td>

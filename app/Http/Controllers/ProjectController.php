@@ -8,12 +8,23 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\User;
+use Validator;
+use Auth;
+use Carbon\Carbon;
 
 class ProjectController extends Controller
 {
 	public function __construct()
 	{
 		$this->middleware('auth');
+	}
+
+	private function _getValidator(Request $request)
+	{
+		return Validator::make($request->all(), [
+		    'name' => 'required|max:255',
+		]);
 	}
 
     /**
@@ -35,9 +46,26 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+		if ($request->isMethod('post'))
+		{
+			$validator = $this->_getValidator($request);
+
+			if ($validator->fails()) {
+				return redirect('/projects/create')->withErrors($validator)->withInput();
+			}
+
+			Project::create([
+				'owner_id' => Auth::user()->id,
+				'name' => $request->input('name'),
+				'created_date' => Carbon::now(),
+			]);
+
+			return redirect('/projects')->with('success', 'Project successfully created');
+		}
+
+		return view('project.create');
     }
 
     /**
@@ -64,9 +92,27 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, Request $request)
     {
-        //
+    	$project = Project::findOrFail($id);
+
+        if ($request->isMethod('post'))
+		{
+			$validator = $this->_getValidator($request);
+
+			if ($validator->fails()) {
+				return redirect('/projects/edit')->withErrors($validator)->withInput();
+			}
+
+			$project->name = $request->input('name');
+			$project->save();
+
+			return redirect('/projects')->with('success', 'Project successfully edited');
+		}
+
+		return view('project.edit', [
+			'project' => $project,
+		]);
     }
 
     /**
@@ -77,6 +123,9 @@ class ProjectController extends Controller
      */
     public function delete($id)
     {
-        //
+        $project = Project::findOrFail($id);
+        $project->delete();
+
+        return redirect('/projects')->with('success', 'Project "' . $project->name . '" successfully deleted');
     }
 }
