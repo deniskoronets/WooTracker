@@ -13,6 +13,8 @@ use Validator;
 use Auth;
 use Event;
 use App\Events\TaskEdited;
+use App\Models\TaskComment;
+use App\Events\TaskCommentEvent;
 
 class TaskController extends Controller
 {
@@ -128,5 +130,65 @@ class TaskController extends Controller
         $task->delete();
 
         return redirect('/tasks')->with('success', 'Task "' . $task->name . '" successfully deleted');
+    }
+
+    public function editComment($id, Request $request)
+    {
+    	$comment = TaskComment::findOrFail($id);
+
+    	$validator = Validator::make($request->all(), [
+    		'task-comment' => 'required',
+		]);
+
+		if ($validator->fails()) {
+			return [
+				'status' => 'error',
+				'errors' => $validator->errors()->toArray()
+			];
+		}
+
+		$comment->description = $request->input('task-comment');
+		Event::fire(new TaskCommentEvent(TaskCommentEvent::EVENT_EDITED, $comment));
+		$comment->save();
+
+		return [
+			'status' => 'ok',
+			'errors' => [],
+		];
+    }
+
+    public function deleteComment($id)
+    {
+    	$comment = TaskComment::findOrFail($id);
+    	Event::fire(new TaskCommentEvent(TaskCommentEvent::EVENT_DELETED, $comment));
+		$comment->delete();
+
+		return [
+			'status' => 'ok',
+			'errors' => [],
+		];
+    }
+
+    public function addComment($id, Request $request)
+    {
+    	$task = Task::findOrFail($id);
+
+    	$validator = Validator::make($request->all(), [
+		    'task-comment' => 'required',
+		]);
+
+		if ($validator->fails()) {
+			return redirect('/tasks/' . $task->id)->withErrors($validator)->withInput();
+		}
+
+    	$comment = TaskComment::create([
+    		'task_id' => $task->id,
+    		'owner_id' => Auth::user()->id,
+    		'description' => $request->input('task-comment'),
+		]);
+
+		Event::fire(new TaskCommentEvent(TaskCommentEvent::EVENT_CREATED, $comment));
+
+    	return redirect('/tasks/' . $task->id)->with('success', 'Comment successfully added');
     }
 }

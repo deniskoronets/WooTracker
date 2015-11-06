@@ -42,7 +42,12 @@ class Task extends Model
     	return $this->hasMany('App\Models\TaskLog', 'task_id', 'id');
     }
 
-    public function lables()
+    public function comments()
+    {
+    	return $this->hasMany('App\Models\TaskComment', 'task_id', 'id');
+    }
+
+    public function labels()
     {
     	return $this->belongsToMany('App\Models\Label', 'task_label', 'task_id', 'label_id');
     }

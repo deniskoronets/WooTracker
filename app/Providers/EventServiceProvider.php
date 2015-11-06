@@ -16,6 +16,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\TaskEdited' => [
     	    'App\Listeners\TaskLogger',
     	],
+    	'App\Events\TaskCommentEvent' => [
+    		'App\Listeners\TaskCommentListener',
+    	],
     ];
 
     /**

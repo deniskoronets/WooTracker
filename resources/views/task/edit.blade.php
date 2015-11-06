@@ -28,11 +28,19 @@
 				</div>
 				<div class='form-group'>
 					<label>Assigned</label>
-					<input type='text' name='assigned_id' class='form-control' value='{{ old('assigned_id') ?: $task->assigned_id }}'>
+					<select name='assigned_id' class='form-control'>
+						@foreach ($users as $user)
+						<option value='{{ $user->id }}'>{{ $user->name }} ({{ $user->email }})</option>
+						@endforeach
+					</select>
 				</div>
 				<div class='form-group'>
 					<label>Status</label>
-					<input type='text' name='status_id' class='form-control' value='{{ old('status_id') ?: $task->status_id }}'>
+					<select name='status_id' class='form-control'>
+						@foreach ($statuses as $status)
+						<option value='{{ $status->id }}'>{{ $status->name }}</option>
+						@endforeach
+					</select>
 				</div>
 				<input type='submit' class='btn btn-success' value='Edit'>
 			</form>

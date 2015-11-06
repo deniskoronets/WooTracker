@@ -29,6 +29,9 @@ Route::group(['prefix' => '/tasks/'], function() {
 	Route::get('/{id}', 'TaskController@view')->where('id', '[0-9]+');
 	Route::get('/{id}/delete', 'TaskController@delete')->where('id', '[0-9]+');
 	Route::any('/{id}/edit', 'TaskController@edit')->where('id', '[0-9]+');
+	Route::any('/{id}/add-comment', 'TaskController@addComment')->where('id', '[0-9]+');
+	Route::any('/edit-comment/{id}', 'TaskController@editComment')->where('id', '[0-9]+');
+	Route::any('/delete-comment/{id}', 'TaskController@deleteComment')->where('id', '[0-9]+');
 });
 
 
