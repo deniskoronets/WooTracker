@@ -1,5 +1,11 @@
 @extends('layout')
 
+@section('breadcrumbs')
+<li><a href='/projects'>Projects</a></li>
+<li><a href='/projects/{{ $project->id }}'>{{ $project->name }}</a></li>
+<li>Edit</li>
+@stop
+
 @section('content')
 
 	@if (count($errors) > 0)

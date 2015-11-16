@@ -1,5 +1,11 @@
 @extends('layout')
 
+@section('breadcrumbs')
+<li><a href='/projects'>Projects</a></li>
+<li><a href='/projects/{{ $project->id }}/'>{{ $project->name }}</a></li>
+<li>Create task</li>
+@stop
+
 @section('content')
 
 	@if (count($errors) > 0)
@@ -42,12 +48,35 @@
 						@endforeach
 					</select>
 				</div>
+				<div class='form-group'>
+					<label>Labels</label>
+					<div>
+						@foreach ($labels as $label)
+						<a class='btn btn-xs task-label' style='color: {{ $label->text_color }}; background-color: {{ $label->color }}'>
+							<input type='checkbox' name='label[{{$label->id }}]' style='float: left; position: relative; top: -2px; margin-right: 5px;'>
+							{{ $label->name }}
+						</a>
+						@endforeach
+					</div>
+				</div>
 				<input type='submit' class='btn btn-success' value='Create'>
 			</form>
 		</div>
 	</div>
-	<script>
-        CKEDITOR.replace('description');
-    </script>
 
+@stop
+
+@section('javascript')
+<script>
+	CKEDITOR.replace('description');
+
+	$('.task-label').click(function(e) {
+
+		if ($(e.target).is('input[type=checkbox]')) return;
+
+		checkbox = $(this).find('input[type=checkbox]');
+
+		checkbox.prop('checked', !checkbox.prop('checked'));
+	})
+</script>
 @stop

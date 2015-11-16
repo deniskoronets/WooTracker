@@ -15,6 +15,8 @@ class CreateTableLabels extends Migration
         Schema::create('labels', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('color');
+            $table->string('text_color');
         });
 
         Schema::create('task_label', function (Blueprint $table) {

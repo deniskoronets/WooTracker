@@ -1,5 +1,9 @@
 @extends('layout')
 
+@section('breadcrumbs')
+<li>Projects</li>
+@stop
+
 @section('content')
 
 	<div class='row'>

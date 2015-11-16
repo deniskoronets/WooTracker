@@ -1,5 +1,10 @@
 @extends('layout')
 
+@section('breadcrumbs')
+<li><a href='/projects'>Projects</a></li>
+<li>Create</li>
+@stop
+
 @section('content')
 
 	@if (count($errors) > 0)

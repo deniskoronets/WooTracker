@@ -15,6 +15,10 @@ use Event;
 use App\Events\TaskEdited;
 use App\Models\TaskComment;
 use App\Events\TaskCommentEvent;
+use App\Models\Project;
+use App\Models\Label;
+use App\Models\TaskLabel;
+use DB;
 
 class TaskController extends Controller
 {
@@ -40,6 +44,8 @@ class TaskController extends Controller
      */
     public function create($projectId, Request $request)
     {
+    	$project = Project::findOrFail($projectId);
+
         if ($request->isMethod('post'))
 		{
 			$validator = $this->_getValidator($request);
@@ -48,21 +54,35 @@ class TaskController extends Controller
 				return redirect('/tasks/create/project-' . $projectId)->withErrors($validator)->withInput();
 			}
 
-			Task::create([
-				'owner_id' => Auth::user()->id,
-				'project_id' => $projectId,
-				'name' => $request->input('name'),
-				'description' => $request->input('description'),
-				'assigned_id' => $request->input('assigned_id'),
-				'status_id' => $request->input('status_id'),
-			]);
+			DB::transaction(function() use ($request, $projectId) {
+
+				$task = Task::create([
+					'owner_id' => Auth::user()->id,
+					'project_id' => $projectId,
+					'name' => $request->input('name'),
+					'description' => $request->input('description'),
+					'assigned_id' => $request->input('assigned_id'),
+					'status_id' => $request->input('status_id'),
+				]);
+
+				foreach ($request->input('label', array()) as $id => $isset) {
+
+					TaskLabel::create([
+						'task_id' => $task->id,
+						'label_id' => $id,
+					]);
+				}
+
+			});
 
 			return redirect('/projects/' . $projectId)->with('success', 'Task successfully created');
 		}
 
 		return view('task.create', [
+			'project' => $project,
 			'users' => User::all(),
 			'statuses' => Status::all(),
+			'labels' => Label::all(),
 		]);
     }
 
@@ -104,9 +124,22 @@ class TaskController extends Controller
 			$task->assigned_id = $request->input('assigned_id');
 			$task->status_id = $request->input('status_id');
 
-			if ($task->save()) {
+			DB::transaction(function() use ($request, $task, $oldTask) {
+
+				$task->save();
+
+				TaskLabel::where('task_id', '=', $task->id)->delete();
+
+				foreach ($request->input('label', array()) as $id => $isset) {
+
+					TaskLabel::create([
+						'task_id' => $task->id,
+						'label_id' => $id,
+					]);
+				}
+
 				Event::fire(new TaskEdited($oldTask, $task));
-			}
+			});
 
 			return redirect('/projects/' . $task->project_id)->with('success', 'Task successfully edited');
 		}
@@ -115,6 +148,7 @@ class TaskController extends Controller
 			'task' => $task,
 			'users' => User::all(),
 			'statuses' => Status::all(),
+			'labels' => Label::all(),
 		]);
     }
 

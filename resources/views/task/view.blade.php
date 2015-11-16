@@ -1,6 +1,7 @@
 @extends('layout')
 
 @section('breadcrumbs')
+<li><a href='/projects'>Projects</a></li>
 <li><a href="/projects/{{ $task->project->id }}">{{ $task->project->name}}</a></li>
 <li>{{$task->name}}</li>
 @stop

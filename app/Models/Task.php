@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\TaskLabel;
+use App\Models\Label;
 
 class Task extends Model
 {
@@ -50,5 +52,12 @@ class Task extends Model
     public function labels()
     {
     	return $this->belongsToMany('App\Models\Label', 'task_label', 'task_id', 'label_id');
+    }
+
+    public function hasLabel(Label $label)
+    {
+    	return TaskLabel::where('task_id', '=', $this->id)
+    					->where('label_id', '=', $label->id)
+    					->count() > 0;
     }
 }

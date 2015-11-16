@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Labels extends Model
+class Label extends Model
 {
     //
 }
