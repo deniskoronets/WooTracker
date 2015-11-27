@@ -55,6 +55,16 @@
 				<td>{{ $task->updated_at }}</td>
 			</tr>
 			<tr>
+				<td style='font-weight: bold'>Labels:</td>
+				<td>
+					@foreach ($task->labels as $label)
+					<a class='btn btn-xs task-label' style='color: {{ $label->text_color }}; background-color: {{ $label->color }}'>
+						{{ $label->name }}
+					</a>
+					@endforeach
+				</td>
+			</tr>
+			<tr>
 				<td colspan='2'>
 					<b>Description:</b><br>
 					{!! $task->description !!}</td>

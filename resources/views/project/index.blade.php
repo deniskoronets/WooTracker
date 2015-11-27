@@ -44,9 +44,11 @@
 					<a href='/projects/{{ $project->id }}/edit' class='btn btn-warning'>
 						Edit
 					</a>
+					@if ($project->owner->id == Auth::id())
 					<a href='/projects/{{ $project->id }}/delete' class='btn btn-danger'>
 						Delete
 					</a>
+					@endif
 				</td>
 			</tr>
 			@endforeach

@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
@@ -15,11 +14,6 @@ use Carbon\Carbon;
 
 class ProjectController extends Controller
 {
-	public function __construct()
-	{
-		$this->middleware('auth');
-	}
-
 	private function _getValidator(Request $request)
 	{
 		return Validator::make($request->all(), [
@@ -36,7 +30,7 @@ class ProjectController extends Controller
     {
     	$projects = Project::all();
 
-    	return view('project.index', [
+    	return view('admin.project.index', [
     		'projects' => $projects
     	]);
     }

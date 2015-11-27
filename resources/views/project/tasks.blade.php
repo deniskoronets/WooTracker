@@ -31,6 +31,7 @@
 				<td>Owner</td>
 				<td>Name</td>
 				<td>Assigned</td>
+				<td>Labels</td>
 				<td>Status</td>
 				<td>Created date</td>
 				<td>Actions</td>
@@ -42,7 +43,14 @@
 				<td>{{ $task->id }}</td>
 				<td><a href='/users/{{ $project->owner->id }}'>{{ $task->owner->name }}</a></td>
 				<td><a href='/tasks/{{ $task->id }}'>{{ $task->name }}</a></td>
-				<td><a href='/users/{{ $project->owner->id }}'>{{ $task->assigned->name }}</a></td>
+				<td><a href='/users/{{ $task->assigned->id }}'>{{ $task->assigned->name }}</a></td>
+				<td>
+					@foreach ($task->labels as $label)
+					<a class='btn btn-xs task-label' style='color: {{ $label->text_color }}; background-color: {{ $label->color }}'>
+						{{ $label->name }}
+					</a>
+					@endforeach
+				</td>
 				<td>{{ $task->status->name }}</td>
 				<td>{{ $task->created_at }}</td>
 				<td>

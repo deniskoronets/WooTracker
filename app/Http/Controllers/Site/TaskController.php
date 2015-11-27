@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Task;
@@ -54,7 +53,9 @@ class TaskController extends Controller
 				return redirect('/tasks/create/project-' . $projectId)->withErrors($validator)->withInput();
 			}
 
-			DB::transaction(function() use ($request, $projectId) {
+			$task = null;
+
+			DB::transaction(function() use ($request, $projectId, &$task) {
 
 				$task = Task::create([
 					'owner_id' => Auth::user()->id,
@@ -75,7 +76,7 @@ class TaskController extends Controller
 
 			});
 
-			return redirect('/projects/' . $projectId)->with('success', 'Task successfully created');
+			return redirect('/tasks/' . $task->id)->with('success', 'Task successfully created');
 		}
 
 		return view('task.create', [
@@ -141,7 +142,7 @@ class TaskController extends Controller
 				Event::fire(new TaskEdited($oldTask, $task));
 			});
 
-			return redirect('/projects/' . $task->project_id)->with('success', 'Task successfully edited');
+			return redirect('/tasks/' . $task->id)->with('success', 'Task successfully edited');
 		}
 
 		return view('task.edit', [

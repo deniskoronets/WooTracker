@@ -33,6 +33,9 @@
           	@section('auth')
           	@if (!Auth::guest())
           	<div class='navbar-form navbar-right' style='color: white;'>
+          		@if (Auth::user()->is_admin)
+          		[ <a href='/admin/' target='_blank'>Admin panel</a> ]
+          		@endif
           		Hello, <b>{{ Auth::user()->name }}</b>!<br>
           		{{ Auth::user()->email }} <a href='/auth/logout'>Logout</a>
       		</div>
@@ -40,10 +43,10 @@
 			<form class="navbar-form navbar-right" action="/auth/login" method="post">
 				{{ csrf_field() }}
 				<div class="form-group">
-					<input type="text" placeholder="Email" class="form-control">
+					<input type="text" name='email' placeholder="Email" class="form-control">
 				</div>
 				<div class="form-group">
-					<input type="password" placeholder="Password" class="form-control">
+					<input type="password" name='password' placeholder="Password" class="form-control">
 				</div>
 				<button type="submit" class="btn btn-success">Sign in</button>
 			</form>
