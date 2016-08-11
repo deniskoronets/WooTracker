@@ -13,3 +13,6 @@ The WooTracker CMS is open-sourced software licensed under the [MIT license](htt
 ### Install
 
 To install it, just init laravel with composer.
+
+### Contributing
+If you want to contribute this project, please contact me via email: deniskoronets[at]woo.zp.ua
